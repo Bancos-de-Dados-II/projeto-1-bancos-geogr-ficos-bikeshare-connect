@@ -1,3 +1,23 @@
+window.onload = function() {
+    const token = localStorage.getItem("token");
+    console.log("token:", token);
+
+    // Se o token não estiver presente, redireciona para a página de bicicletas
+    if (!token) {
+        window.location.href = "./bicicletas.html"; // Redireciona para a página de login
+    }
+
+   /* const payload = JSON.parse(atob(token.split(".")[1])); // Decodifica o payload
+console.log(payload.tipo); 
+
+    if (payload.tipo === "Comum" || payload.tipo === "Administrador Geral" ) {
+        window.location.href = "../Bicicletas/bicicletas.html"; // Redireciona para a página de login
+    } 
+    else {
+     console.log("Bem vindo administrador")
+    }*/
+};
+
 async function receberEstacoes() {
     try{
         const resposta = await fetch("http://localhost:3000/estacao", {

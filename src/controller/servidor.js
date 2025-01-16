@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import { getEstacao, createEstacao, geomFromText, deleteEstacao } from "./funcoesEstacao.js";
-import { getAllUsers, getUserById, getUserByCpfCnpj, createUser, updateUser, deleteUser } from "./userController.js";
+import { getAllUsers, getUserById, getUserByCpfCnpj, getUserByEmail, createUser, updateUser, deleteUser } from "./userController.js";
 import { getBicicleta, createBicicleta, filtrarBicicleta, retirarBicicleta, devolverBicicleta, deleteBicicleta } from "./funcoesBicicleta.js";
 import { autenticar, verificarComum, verificarAdministradorBicicletas, verificarAdministradorGeral } from './autenticar.js';
 
@@ -138,30 +138,49 @@ server.get("/users/cpfCnpj/:cpfCnpj", async (req, res) => {
     }
 });
 
+server.get("/users/email/:email", async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        const user = await getUserByEmail(email);
+
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({ error: "Usuário não encontrado" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Erro ao buscar usuário" });
+    }
+});
+
 //EndPoint Login
 server.post("/login", async (req, res) => {
-    const { cpf_cnpj, senha } = req.body;
+    const { email, senha } = req.body;
     console.log("acessou metodo post /login");
     try {
-        const user = await getUserByCpfCnpj(cpf_cnpj);
-
+        const user = await getUserByEmail(email);
         if (!user) {
             // Usuário não encontrado
             return res.status(404).json({ error: "Usuário não encontrado" });
         }
+        console.log(senha);
+        console.log(user.senha);
 
         // Comparar a senha fornecida com o hash salvo no banco
         const isPasswordValid = await bcrypt.compare(senha, user.senha);
-
         if (!isPasswordValid) {
             // Senha incorreta
             return res.status(401).json({ error: "Senha incorreta" });
         }
+          /*  if (senha !== user.senha) {
+                return res.status(401).json({ error: "Senha incorreta" });
+            }*/
 
         const token = jwt.sign(
-            { id: user.id, cpf_cnpj: user.cpf_cnpj, tipo: user.tipo }, // Inclui o tipo do usuário no payload
+            { id: user.id, cpf_cnpj: user.cpf_cnpj, email: user.email, tipo: user.tipo }, // dados do payload
             "seuSegredoSuperSecreto",
-            { expiresIn: "1h" }
+            { expiresIn: "3h" }
         ); //gerando token com validade de 1 hora;
 
         // Login bem-sucedido

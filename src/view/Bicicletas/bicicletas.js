@@ -1,3 +1,13 @@
+window.onload = function() {
+    const token = localStorage.getItem("token");
+    console.log("token:", token);
+
+    // Se o token não estiver presente, redireciona para a página de login
+    if (!token) {
+        window.location.href = "../Login/index.htl"; // Redireciona para a página de login
+    }
+};
+
 async function deletarBicicleta(id){
     try{
         const resposta = await fetch(`http://localhost:3000/bicicleta/${id}`, {

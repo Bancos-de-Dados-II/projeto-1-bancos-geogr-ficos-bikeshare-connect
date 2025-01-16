@@ -5,10 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BikeShare</title>
     <link rel="stylesheet" href="../styles/bicicletas.css">
-    <script src="ehADM.js" defer></script>
-    <script src="bicicletas.js" defer></script>
+    <script src="ehADM.js" onload="carregarBicicletas()"></script>
+
+<script>
+function carregarBicicletas() {
+    // Agora que o primeiro script carregou, podemos carregar o segundo
+    const script = document.createElement('script');
+    script.src = 'bicicletas.js';
+    document.head.appendChild(script);
+}
+</script>
 </head>
 <body>
+    
     <div id="cellphone">
         <!-- App Bar -->
         <div id="appbar">

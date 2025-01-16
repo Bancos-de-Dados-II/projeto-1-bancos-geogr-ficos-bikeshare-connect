@@ -1,3 +1,13 @@
+window.onload = function() {
+    const token = localStorage.getItem("token");
+    console.log("token:", token);
+
+    // Se o token não estiver presente, redireciona para a página de bicicletas
+    if (!token) {
+        window.location.href = "./bicicletas.html"; // Redireciona para a página de login
+    }
+};
+
 //API Leaflet
 var map = L.map('map').setView([-6.88, -38.58], 13);
 const grupoMarcadores = L.layerGroup().addTo(map);

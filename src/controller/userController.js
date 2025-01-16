@@ -33,6 +33,22 @@ async function getUserByCpfCnpj(cpfCnpj) {
     }
 }
 
+async function getUserByEmail(email) {
+    try {
+        // Busca o usuário com base no campo 'email'
+        const user = await User.findOne({
+            where: {
+                email: email, // Critério de busca
+            },
+        });
+
+        return user; // Retorna o usuário encontrado ou null se não houver correspondência
+    } catch (error) {
+        console.error("Erro ao buscar usuário pelo EMAIL:", error);
+        throw new Error("Erro ao buscar usuário. Tente novamente mais tarde.");
+    }
+}
+
 async function createUser(data) {
     try {
         console.log("Data received for creation:", data); // Log para verificar entrada
@@ -72,7 +88,7 @@ async function deleteUser(id) {
     return true;
 }
 
-export { getAllUsers, getUserById, getUserByCpfCnpj, createUser, updateUser, deleteUser };
+export { getAllUsers, getUserById, getUserByCpfCnpj, getUserByEmail, createUser, updateUser, deleteUser };
 
 
 /*
